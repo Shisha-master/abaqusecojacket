@@ -1,23 +1,11 @@
-# beam_with_slit_to_inp.py
-# Create a rectangular beam with a rectangular slit (void), mesh it with Gmsh,
-# and export an Abaqus .inp with mesh size control.
-#
-# Usage examples (Windows):
-#   python beam_with_slit_to_inp.py --out "C:/tmp/beam.inp"
-#   python beam_with_slit_to_inp.py --L 1000 --W 150 --H 200 --sx 40 --sy 20 --sz 200 --mesh 10 --etype3d C3D10 --out "C:/tmp/beam_q.inp"
-#   python beam_with_slit_to_inp.py --dim 2 --L 1000 --W 200 --sx 40 --sy 20 --mesh 10 --etype2d CPS3 --out "C:/tmp/plate.inp"
 
 import argparse
 import gmsh
 import math
+import os
 
 def build_geometry_3d(L, W, H, sx, sy, sz, cx, cy, cz):
-    """
-    Build a 3D beam (block) of size LxWxH with a centered/positioned rectangular void of size sx x sy x sz.
-    Origin is at (0,0,0). Beam spans:
-      x in [0, L], y in [-W/2, W/2], z in [-H/2, H/2]
-    The void is a block centered at (cx, cy, cz) (default 0,0,0) and subtracted from the beam.
-    """
+
     occ = gmsh.model.occ
     gmsh.model.add("beam_with_slit_3d")
 
@@ -184,8 +172,7 @@ def run(L, W, H, sx, sy, sz, cx, cy, cz, dim, mesh_size, etype2d, etype3d, out_p
         gmsh.finalize()
 
 if __name__ == "__main__":
-    import os
-
+    
     ap = argparse.ArgumentParser(description="Rectangular beam with rectangular slit → Abaqus INP via Gmsh")
     # Beam (outer) dimensions
     ap.add_argument("--L",  type=float, default=600.0, help="Beam length (X)")
